@@ -14,7 +14,7 @@ class SeusersController < ApplicationController
       SeUser.create(user: user_hash)
     end
 
-    Page.last.update(number: params[:data][:page])
+    Page.last.update(number: params[:data][:page] + 1)
 
     render json: {page: params[:data][:page]}, status: 200
   end
