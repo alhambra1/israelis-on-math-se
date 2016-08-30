@@ -43,7 +43,7 @@
         }
      
         ctrl.getStackExchangeUsers = function(){
-          $http.get('https://api.stackexchange.com/2.2/users?page=' + ctrl.page + '&pagesize=100&site=math.stackexchange').then(function(resp){
+          $http.get('https://api.stackexchange.com/2.2/users?page=' + ctrl.page + '&pagesize=100&order=asc&sort=creation&site=math.stackexchange').then(function(resp){
             if (resp.status === 400 || resp.data.items.length === 0){
               return;
             }
