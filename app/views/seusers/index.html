@@ -52,9 +52,7 @@
         }
         
         ctrl.paginate = function(){
-          ctrl.pagedUsers = ctrl.users.slice((ctrl.currentPage - 1) * ctrl.pageSize,ctrl.pageSize);
-          console.log(ctrl.users.slice(1*100,100))
-    console.log(ctrl.users.length,ctrl.pageSize,ctrl.currentPage - 1,ctrl.pagedUsers)
+          ctrl.pagedUsers = ctrl.users.slice((parseInt(ctrl.currentPage) - 1) * parseInt(ctrl.pageSize),parseInt(ctrl.pageSize));
         }
         
         ctrl.isLink = function(value){
