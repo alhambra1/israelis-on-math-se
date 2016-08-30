@@ -53,7 +53,7 @@
         
         ctrl.paginate = function(){
           ctrl.pagedUsers = ctrl.users.slice((ctrl.currentPage - 1) * ctrl.pageSize,ctrl.pageSize);
-    console.log(ctrl.pageSize,ctrl.currentPage - 1,ctrl.pagedUsers)
+    console.log(ctrl.users.length,ctrl.pageSize,ctrl.currentPage - 1,ctrl.pagedUsers)
         }
         
         ctrl.isLink = function(value){
@@ -64,7 +64,7 @@
           return /image/i.test(value);
         }
         
-        $http.get('/seusers.json').then(function(resp){
+        $http.get('https://math-se-israelis.herokuapp.com/seusers.json').then(function(resp){
           ctrl.users = resp.data;
           ctrl.numPages = Math.floor(ctrl.users.length / ctrl.pageSize);
           ctrl.paginate();

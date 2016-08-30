@@ -1,4 +1,6 @@
 class SeusersController < ApplicationController
+  skip_before_filter :verify_authenticity_token, :only => [:upload]
+
   def index
     respond_to do |f|
       f.json {render json: SeUser.all, status: 200}
