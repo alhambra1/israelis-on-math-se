@@ -1,74 +1,59 @@
-<!doctype html>
-<head>
-  <meta charset="UTF-8">
-  <title>StackExchange Users</title>
-  <style>
-    .user {
-      margin: 10px;
-      padding: 6px;
-      border: 1px solid black;
-    }
-  </style>
-</head>
-<body>
-  <div ng-app="app">
-    <div ng-controller="IndexController as ctrl">
-      <h2>Math.StackExchange Users with Location Matching 'israel'</h2>
-      <p>Page size: <input ng-model="ctrl.pageSize" /></p>
-      Current page: <input type="text" ng-model="ctrl.currentPage" /> of {{ ctrl.numPages }} <button ng-click="ctrl.paginate()">Go</button>
-      <p><button ng-click="ctrl.prevPage()">Prev Page</button> <button ng-click="ctrl.nextPage()">Next Page</button></p>
-      <div class="user" ng-repeat="user in ctrl.pagedUsers">
-        <div ng-repeat="(key, value) in user.user">
-          <span>{{ key }}: </span> <span><a ng-href="{{ value }}" ng-if="ctrl.isLink(key)" target="_blank">{{ value }}</a><img src="{{ value }}" ng-if="ctrl.isImage(key)">{{ !ctrl.isLink(key) && !ctrl.isImage(key) ? value : '' }}</span>
-        </div>
+<div ng-app="app">
+  <div ng-controller="IndexController as ctrl">
+    <h2>Math.StackExchange Users with Location Matching 'israel'</h2>
+    <p>Page size: <input ng-model="ctrl.pageSize" /></p>
+    Current page: <input type="text" ng-model="ctrl.currentPage" /> of {{ ctrl.numPages }} <button ng-click="ctrl.paginate()">Go</button>
+    <p><button ng-click="ctrl.prevPage()">Prev Page</button> <button ng-click="ctrl.nextPage()">Next Page</button></p>
+    <div class="user" ng-repeat="user in ctrl.pagedUsers">
+      <div ng-repeat="(key, value) in user.user">
+        <span>{{ key }}: </span> <span><a ng-href="{{ value }}" ng-if="ctrl.isLink(key)" target="_blank">{{ value }}</a><img src="{{ value }}" ng-if="ctrl.isImage(key)">{{ !ctrl.isLink(key) && !ctrl.isImage(key) ? value : '' }}</span>
       </div>
     </div>
   </div>
+</div>
 
-  <script src="js/angular.min.js"></script>
-  <script type="text/javascript" charset="utf-8">
-    angular
-      .module('app',[])
-      .controller('IndexController',function($http){
-        var ctrl = this;
-  
-        ctrl.pageSize = 100;
-        ctrl.currentPage = 1;
-        ctrl.users = [];
-        ctrl.numPages = 0;
-             
-        ctrl.prevPage = function(){
-          if (ctrl.currentPage > 1){ 
-            ctrl.currentPage--;
-            ctrl.paginate();
-          }
-        }
-        
-        ctrl.nextPage = function(){
-          if (ctrl.users.length > ctrl.currentPage * ctrl.pageSize){ 
-            ctrl.currentPage++;
-            ctrl.paginate();
-          }
-        }
-        
-        ctrl.paginate = function(){
-          ctrl.pagedUsers = ctrl.users.slice((parseInt(ctrl.currentPage) - 1) * parseInt(ctrl.pageSize),parseInt(ctrl.pageSize));
-        }
-        
-        ctrl.isLink = function(value){
-          return /link/i.test(value);
-        }
-        
-        ctrl.isImage = function(value){
-          return /image/i.test(value);
-        }
-        
-        $http.get('/seusers.json').then(function(resp){
-          ctrl.users = resp.data;
-          ctrl.numPages = Math.floor(ctrl.users.length / ctrl.pageSize);
+<script src="js/angular.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+  angular
+    .module('app',[])
+    .controller('IndexController',function($http){
+      var ctrl = this;
+
+      ctrl.pageSize = 100;
+      ctrl.currentPage = 1;
+      ctrl.users = [];
+      ctrl.numPages = 0;
+           
+      ctrl.prevPage = function(){
+        if (ctrl.currentPage > 1){ 
+          ctrl.currentPage--;
           ctrl.paginate();
-        });
+        }
+      }
+      
+      ctrl.nextPage = function(){
+        if (ctrl.users.length > ctrl.currentPage * ctrl.pageSize){ 
+          ctrl.currentPage++;
+          ctrl.paginate();
+        }
+      }
+      
+      ctrl.paginate = function(){
+        ctrl.pagedUsers = ctrl.users.slice((parseInt(ctrl.currentPage) - 1) * parseInt(ctrl.pageSize),parseInt(ctrl.pageSize));
+      }
+      
+      ctrl.isLink = function(value){
+        return /link/i.test(value);
+      }
+      
+      ctrl.isImage = function(value){
+        return /image/i.test(value);
+      }
+      
+      $http.get('/seusers.json').then(function(resp){
+        ctrl.users = resp.data;
+        ctrl.numPages = Math.floor(ctrl.users.length / ctrl.pageSize);
+        ctrl.paginate();
       });
-  </script>
-</body>
-</html>
+    });
+</script>

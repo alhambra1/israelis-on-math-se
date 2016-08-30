@@ -1,74 +1,59 @@
-<!doctype html>
-<head>
-  <meta charset="UTF-8">
-  <title>StackExchange Users</title>
-  <style>
-    .user {
-      margin: 10px;
-      padding: 6px;
-      border: 1px solid black;
-    }
-  </style>
-</head>
-<body>
-  <div ng-app="app">
-    <div ng-controller="ApiController as ctrl">
-      <h2>Math.StackExchange Users - recursively get all pages with users with location matching 'israel'</h2>
-      <p>Current page: {{ ctrl.page }}</p>
-    </div>
+<div ng-app="app">
+  <div ng-controller="ApiController as ctrl">
+    <h2>Math.StackExchange Users - recursively get all pages with users with location matching 'israel'</h2>
+    <p>Current page: {{ ctrl.page }}</p>
   </div>
+</div>
 
-  <script src="js/angular.min.js"></script>
-  <script type="text/javascript" charset="utf-8">
-    angular
-      .module('app',[])
-      .controller('ApiController',function($http,$filter){
-        var ctrl = this;
-  
-        ctrl.pageLimit = 100;
-        ctrl.search = {location: 'israel'};
-        ctrl.israelis = [];
-        
-        ctrl.refilterUsers = function(){
-          ctrl.filteredUsers = $filter('filter')(ctrl.users,ctrl.search,'strict');
-        }
-     
-        ctrl.getStackExchangeUsers = function(){
-          $http.get('https://api.stackexchange.com/2.2/users?page=' + ctrl.page + '&pagesize=100&order=asc&sort=creation&site=math.stackexchange').then(function(resp){
-            if (resp.status === 400 || resp.data.items.length === 0){
-              return;
+<script src="js/angular.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+  angular
+    .module('app',[])
+    .controller('ApiController',function($http,$filter){
+      var ctrl = this;
+
+      ctrl.pageLimit = 100;
+      ctrl.search = {location: 'israel'};
+      ctrl.israelis = [];
+      
+      ctrl.refilterUsers = function(){
+        ctrl.filteredUsers = $filter('filter')(ctrl.users,ctrl.search,'strict');
+      }
+   
+      ctrl.getStackExchangeUsers = function(){
+        $http.get('https://api.stackexchange.com/2.2/users?page=' + ctrl.page + '&pagesize=100&order=asc&sort=creation&site=math.stackexchange').then(function(resp){
+          if (resp.status === 400 || resp.data.items.length === 0){
+            return;
+          }
+
+          var postData = {
+            data: {
+              users: resp.data.items.filter(function(x){ return x.location !== undefined && x.location.match(/israel/i); }),
+              page: ctrl.page
             }
+          }
 
-            var postData = {
-              data: {
-                users: resp.data.items.filter(function(x){ return x.location !== undefined && x.location.match(/israel/i); }),
-                page: ctrl.page
-              }
+          $http.post('/seusers',postData).then(function(resp){
+
+          //ctrl.refilterUsers();
+          
+          //var copy = angular.copy(ctrl.filteredUsers);
+          //ctrl.israelis = ctrl.israelis.concat(copy)
+            if (resp.status === 200){ 
+              ctrl.getNextPage();
             }
-
-            $http.post('/seusers',postData).then(function(resp){
-
-            //ctrl.refilterUsers();
-            
-            //var copy = angular.copy(ctrl.filteredUsers);
-            //ctrl.israelis = ctrl.israelis.concat(copy)
-              if (resp.status === 200){ 
-                ctrl.getNextPage();
-              }
-            });
           });
-        }
-        
-        ctrl.getNextPage = function(){
-          ctrl.page++;
-          ctrl.getStackExchangeUsers();
-        }
-        
-        $http.get('/seusers/page').then(function(resp){
-          ctrl.page = resp.data.currentPage;
-          ctrl.getStackExchangeUsers();
         });
+      }
+      
+      ctrl.getNextPage = function(){
+        ctrl.page++;
+        ctrl.getStackExchangeUsers();
+      }
+      
+      $http.get('/seusers/page').then(function(resp){
+        ctrl.page = resp.data.currentPage;
+        ctrl.getStackExchangeUsers();
       });
-  </script>
-</body>
-</html>
+    });
+</script>
