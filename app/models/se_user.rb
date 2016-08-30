@@ -1,0 +1,2 @@
+class SeUser < ApplicationRecord
+end
