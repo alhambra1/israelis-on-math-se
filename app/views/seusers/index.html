@@ -39,7 +39,8 @@
       }
       
       ctrl.paginate = function(){
-        ctrl.pagedUsers = ctrl.users.slice((parseInt(ctrl.currentPage) - 1) * parseInt(ctrl.pageSize),parseInt(ctrl.pageSize));
+        var start = (ctrl.currentPage - 1) * ctrl.pageSize;
+        ctrl.pagedUsers = ctrl.users.slice(start, start + ctrl.pageSize);
       }
       
       ctrl.isLink = function(value){
