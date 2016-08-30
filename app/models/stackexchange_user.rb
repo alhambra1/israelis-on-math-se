@@ -1,0 +1,2 @@
+class StackexchangeUser < ApplicationRecord
+end
