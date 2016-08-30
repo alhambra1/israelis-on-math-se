@@ -53,7 +53,7 @@
       
       $http.get('/seusers.json').then(function(resp){
         ctrl.users = resp.data;
-        ctrl.numPages = Math.floor(ctrl.users.length / ctrl.pageSize);
+        ctrl.numPages = Math.ceil(ctrl.users.length / ctrl.pageSize);
         ctrl.paginate();
       });
     });
