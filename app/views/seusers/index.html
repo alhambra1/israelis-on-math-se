@@ -18,7 +18,7 @@
       Current page: <input type="text" ng-model="ctrl.currentPage" /> of {{ Math.floor(ctrl.users.length / ctrl.pageSize) }} <button ng-click="ctrl.paginate()">Go</button>
       <p><button ng-click="ctrl.prevPage()">Prev Page</button> <button ng-click="ctrl.nextPage()">Next Page</button></p>
       <div class="user" ng-repeat="user in ctrl.pagedUsers">
-        <div ng-repeat="(key, value) in user">
+        <div ng-repeat="(key, value) in user.user">
           <span> {{key}} </span> <span> {{ value }} </span>
         </div>
       </div>
