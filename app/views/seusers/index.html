@@ -19,7 +19,7 @@
       <p><button ng-click="ctrl.prevPage()">Prev Page</button> <button ng-click="ctrl.nextPage()">Next Page</button></p>
       <div class="user" ng-repeat="user in ctrl.pagedUsers">
         <div ng-repeat="(key, value) in user.user">
-          <span>{{ key }}: </span> <span><a ng-href="{{ value }}" ng-if="ctrl.isLink(key)" target="_blank">{{ value }}</a></span>
+          <span>{{ key }}: </span> <span><a ng-href="{{ value }}" ng-if="ctrl.isLink(key)" target="_blank">{{ value }}</a><img src="{{ value }}" ng-if="ctrl.isImage(key)">{{ !ctrl.isLink(key) && !ctrl.isImage(key) ? value : '' }}</span>
         </div>
       </div>
       <p ng-hide="ctrl.filteredUsers.length">No matches for that location.</p>
@@ -58,6 +58,10 @@
         
         ctrl.isLink = function(value){
           return /link/i.test(value);
+        }
+        
+        ctrl.isImage = function(value){
+          return /image/i.test(value);
         }
         
         $http.get('/seusers.json').then(function(resp){
