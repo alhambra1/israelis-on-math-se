@@ -1,6 +1,9 @@
 class SeusersController < ApplicationController
   def index
-    render json: SeUser.all, status: 200
+    respond_to do |f|
+      f.json {render json: SeUser.all, status: 200}
+      f.html {render :index}
+    end
   end
 
   def page
