@@ -35,13 +35,7 @@
   
         ctrl.pageSize = 100;
         ctrl.currentPage = 1;
-     
-        ctrl.getUsersOnServer = function(){
-          $http.get('/seusers/index.json').then(function(resp){
-            ctrl.users = resp.data;
-          });
-        }
-        
+             
         ctrl.prevPage = function(){
           if (ctrl.currentPage > 1){ 
             ctrl.currentPage--;
@@ -60,7 +54,10 @@
           ctrl.pagedUsers = ctrl.users.slice((ctrl.currentPage - 1) * ctrl.pageSize,ctrl.pageSize);
         }
         
-        ctrl.paginate();
+        $http.get('/seusers/index.json').then(function(resp){
+          ctrl.users = resp.data;
+          ctrl.paginate();
+        });
       });
   </script>
 </body>
