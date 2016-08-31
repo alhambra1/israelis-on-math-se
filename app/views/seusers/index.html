@@ -54,7 +54,7 @@
           ctrl.pagedUsers = ctrl.users.slice((ctrl.currentPage - 1) * ctrl.pageSize,ctrl.pageSize);
         }
         
-        $http.get('/seusers/index.json').then(function(resp){
+        $http.get('/seusers.json').then(function(resp){
           ctrl.users = resp.data;
           ctrl.paginate();
         });
