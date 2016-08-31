@@ -14,8 +14,8 @@
   <div ng-app="app">
     <div ng-controller="IndexController as ctrl">
       <h2>Math.StackExchange Users with Location Matching 'israel'</h2>
-      <p>Page size: <input ng-model="ctrl.pageSize" /> <button ng-click="ctrl.getStackExchangeUsers()">Go</button></p>
-      Current page: <input type="text" ng-model="ctrl.currentPage" ng-change="ctrl.paginate()" />
+      <p>Page size: <input ng-model="ctrl.pageSize" /></p>
+      Current page: <input type="text" ng-model="ctrl.currentPage" /> of {{ Math.floor(ctrl.users.length / ctrl.pageSize) }} <button ng-click="ctrl.paginate()">Go</button>
       <p><button ng-click="ctrl.prevPage()">Prev Page</button> <button ng-click="ctrl.nextPage()">Next Page</button></p>
       <div class="user" ng-repeat="user in ctrl.pagedUsers">
         <div ng-repeat="(key, value) in user">
