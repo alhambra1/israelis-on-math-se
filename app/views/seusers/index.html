@@ -19,7 +19,7 @@
       <p><button ng-click="ctrl.prevPage()">Prev Page</button> <button ng-click="ctrl.nextPage()">Next Page</button></p>
       <div class="user" ng-repeat="user in ctrl.pagedUsers">
         <div ng-repeat="(key, value) in user.user">
-          <span> {{key}} </span> <span> {{ value }} </span>
+          <span>{{ key }}: </span> <span>{{ key.match(/image|link/i) ? ctrl.format(value) : value }}</span>
         </div>
       </div>
       <p ng-hide="ctrl.filteredUsers.length">No matches for that location.</p>
@@ -52,6 +52,15 @@
         
         ctrl.paginate = function(){
           ctrl.pagedUsers = ctrl.users.slice((ctrl.currentPage - 1) * ctrl.pageSize,ctrl.pageSize);
+        }
+        
+        ctrl.format = function(value){
+          if (value.match(/image/i){
+            return '<img src="' + value + '">';
+            
+          } else if (value.match(/link/i){
+            return '<a href="' value '">' + value + '</a>';
+          }
         }
         
         $http.get('/seusers.json').then(function(resp){
