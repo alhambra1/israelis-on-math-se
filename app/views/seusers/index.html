@@ -22,7 +22,6 @@
           <span>{{ key }}: </span> <span><a ng-href="{{ value }}" ng-if="ctrl.isLink(key)" target="_blank">{{ value }}</a><img src="{{ value }}" ng-if="ctrl.isImage(key)">{{ !ctrl.isLink(key) && !ctrl.isImage(key) ? value : '' }}</span>
         </div>
       </div>
-      <p ng-hide="ctrl.filteredUsers.length">No matches for that location.</p>
     </div>
   </div>
 
@@ -54,6 +53,7 @@
         
         ctrl.paginate = function(){
           ctrl.pagedUsers = ctrl.users.slice((ctrl.currentPage - 1) * ctrl.pageSize,ctrl.pageSize);
+    console.log(ctrl.pageSize,ctrl.currentPage - 1,ctrl.pagedUsers)
         }
         
         ctrl.isLink = function(value){

@@ -14,16 +14,7 @@
   <div ng-app="app">
     <div ng-controller="ApiController as ctrl">
       <h2>Math.StackExchange Users - recursively get all pages with users with location matching 'israel'</h2>
-      <p>Page Limit: <input ng-model="ctrl.pageLimit" /> <button ng-click="ctrl.getStackExchangeUsers()">Go</button></p>
-      <button ng-click="ctrl.getNextPage()">Next Page</button></p>
-      <p>Location: <input ng-model="ctrl.search.location"></p>
       <p>Current page: {{ ctrl.page }}</p>
-      <div class="user" ng-repeat="user in ctrl.israelis">
-        <div ng-repeat="(key, value) in user">
-          <span> {{key}} </span> <span> {{ value }} </span>
-        </div>
-      </div>
-      <p ng-hide="ctrl.filteredUsers.length">No matches for that location.</p>
     </div>
   </div>
 
