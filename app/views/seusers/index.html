@@ -67,11 +67,14 @@
           $http.post('seusers/querySe',postData).then(function(resp){
             var hasMatches = resp.data.has_matches;
 
-            if (hasMatches){
+            if (hasMatches && !resp.data.too_many_requests){
               ctrl.filteredUsers.push(ctrl.users[i]);
 
-            } else {
+            } else if (resp.data.too_many_requests){
               ctrl.filteredUsers.push({user: {user_id: ctrl.users[i].user.user_id, too_many_requests: resp.data.too_many_requests }})
+
+            } else {
+              ctrl.filteredUsers.push({user: {user_id: ctrl.users[i].user.user_id, results: 'none'}});
             }
 
             $timeout(function(){ querySe(i + 1); }, parseInt(ctrl.requestRate));
