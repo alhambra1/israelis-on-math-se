@@ -4,25 +4,29 @@
     <p>Page size: <input ng-model="ctrl.pageSize" /></p>
     Current page: <input type="text" ng-model="ctrl.currentPage" /> of {{ ctrl.numPages }} <button ng-click="ctrl.paginate()">Go</button>
     <p><button ng-click="ctrl.prevPage()">Prev Page</button> <button ng-click="ctrl.nextPage()">Next Page</button></p>
+    <p>Filter users by text search on SE: <input type="text" ng-model="ctrl.search" /> Request Rate (milliseconds): <input type="text" ng-model="ctrl.requestRate" /> <button ng-click="ctrl.filterUsers()">Search</button></p>
     <div class="user" ng-repeat="user in ctrl.pagedUsers">
       <div ng-repeat="(key, value) in user.user">
         <span>{{ key }}: </span> <span><a ng-href="{{ value }}" ng-if="ctrl.isLink(key)" target="_blank">{{ value }}</a><img src="{{ value }}" ng-if="ctrl.isImage(key)">{{ !ctrl.isLink(key) && !ctrl.isImage(key) ? value : '' }}</span>
       </div>
     </div>
-  </div>
-</div>
+    <div ng-hide="ctrl.pagedUsers.length > 0">No results.</div>
+  </div> <!-- ng-controller -->
+</div> <!-- ng-app -->
 
 <script src="js/angular.min.js"></script>
 <script type="text/javascript" charset="utf-8">
   angular
     .module('app',[])
-    .controller('IndexController',function($http){
+    .controller('IndexController',function($http,$timeout){
       var ctrl = this;
 
       ctrl.pageSize = 100;
       ctrl.currentPage = 1;
       ctrl.users = [];
       ctrl.numPages = 0;
+
+      ctrl.requestRate = 1000;
            
       ctrl.prevPage = function(){
         if (ctrl.currentPage > 1){ 
@@ -32,7 +36,7 @@
       }
       
       ctrl.nextPage = function(){
-        if (ctrl.users.length > ctrl.currentPage * ctrl.pageSize){ 
+        if (ctrl.filteredUsers.length > ctrl.currentPage * ctrl.pageSize){ 
           ctrl.currentPage++;
           ctrl.paginate();
         }
@@ -40,7 +44,7 @@
       
       ctrl.paginate = function(){
         var start = (ctrl.currentPage - 1) * ctrl.pageSize;
-        ctrl.pagedUsers = ctrl.users.slice(start, start + ctrl.pageSize);
+        ctrl.pagedUsers = ctrl.filteredUsers.slice(start, start + ctrl.pageSize);
       }
       
       ctrl.isLink = function(value){
@@ -51,9 +55,42 @@
         return /image/i.test(value);
       }
       
+      ctrl.filterUsers = function(){
+        function querySe(i){
+          if (i == ctrl.users.length){
+            ctrl.paginate();
+            return;
+          }
+          
+          postData = {user_id: ctrl.users[i].user.user_id, query: ctrl.search}
+
+          $http.post('seusers/querySe',postData).then(function(resp){
+            var hasMatches = resp.data;
+
+            if (hasMatches){
+              ctrl.filteredUsers.push(ctrl.users[i]);
+
+            } else {
+              ctrl.filteredUsers.push({user: {user_id: ctrl.users[i].user.user_id, results: 'None'}})
+            }
+
+            $timeout(function(){ querySe(i + 1); }, ctrl.requestRate);
+          });
+        }
+      
+        if (ctrl.search && ctrl.search.match(/\S/)){
+          ctrl.pagedUsers = ctrl.filteredUsers = [];
+          querySe(0);
+          
+        } else {
+          ctrl.filteredUsers = ctrl.users;
+        }
+      }
+      
       $http.get('/seusers.json').then(function(resp){
         ctrl.users = resp.data;
-        ctrl.numPages = Math.ceil(ctrl.users.length / ctrl.pageSize);
+        ctrl.filterUsers();
+        ctrl.numPages = Math.ceil(ctrl.filteredUsers.length / ctrl.pageSize);
         ctrl.paginate();
       });
     });

@@ -6,11 +6,8 @@ class SeusersController < ApplicationController
     end
   end
   
-  def index1
-  end
-
   def querySe
-    file = open("http://stackoverflow.com/search?q=user%3A#{params[:user_id]}+" + URI::encode(params[:query])).read
+    file = open("http://math.stackexchange.com/search?q=user%3A#{params[:user_id]}+" + URI::encode(params[:query])).read
     render json: !file.match(/returned no matches/)
   end
 

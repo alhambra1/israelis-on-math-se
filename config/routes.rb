@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   root to: 'seusers#index'
   
   get 'seusers', to: 'seusers#index'
-get 'index1', to: 'seusers#index1'
+
   post 'seusers/querySe', to: 'seusers#querySe'
 
   post 'seusers', to: 'seusers#upload'
