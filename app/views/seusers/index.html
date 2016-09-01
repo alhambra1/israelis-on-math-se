@@ -74,7 +74,7 @@
               ctrl.filteredUsers.push({user: {user_id: ctrl.users[i].user.user_id, too_many_requests: resp.data.too_many_requests }})
             }
 
-            $timeout(function(){ querySe(i + 1); }, ctrl.requestRate);
+            $timeout(function(){ querySe(i + 1); }, parseInt(ctrl.requestRate));
           });
         }
       
