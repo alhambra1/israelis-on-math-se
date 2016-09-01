@@ -10,8 +10,9 @@
         <span>{{ key }}: </span> <span><a ng-href="{{ value }}" ng-if="ctrl.isLink(key)" target="_blank">{{ value }}</a><img src="{{ value }}" ng-if="ctrl.isImage(key)">{{ !ctrl.isLink(key) && !ctrl.isImage(key) ? value : '' }}</span>
       </div>
     </div>
-  </div>
-</div>
+    <div ng-hide="ctrl.pagedUsers.length > 0">No results.</div>
+  </div> <!-- ng-controller -->
+</div> <!-- ng-app -->
 
 <script src="js/angular.min.js"></script>
 <script type="text/javascript" charset="utf-8">
@@ -53,18 +54,28 @@
       }
       
       ctrl.filterUsers = function(){
-        function querySE(i){
+        function querySe(i){
           if (i == ctrl.users.length){
+            ctrl.paginate();
             return;
           }
           
-          $http.get('http://stackoverflow.com/search?q=user%3A' + ctrl.users[i].user_id + '+' + encodeURIComponent(ctrl.search)).then(function(resp){
-            console.log(resp.data);
+          postData = {user_id: ctrl.users[i].user.user_id, query: ctrl.search}
+
+          $http.post('seusers/querySe',postData).then(function(resp){
+            var hasMatches = resp.data;
+
+            if (hasMatches){
+              ctrl.filteredUsers.push(ctrl.users[i]);
+            }
+
+            querySe(i + 1);
           });
         }
       
         if (ctrl.search && ctrl.search.match(/\S/)){
-          querySE(0);
+          ctrl.filteredUsers = [];
+          querySe(0);
           
         } else {
           ctrl.filteredUsers = ctrl.users;

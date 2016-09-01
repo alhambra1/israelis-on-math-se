@@ -5,6 +5,8 @@ Rails.application.routes.draw do
   
   get 'seusers', to: 'seusers#index'
 get 'index1', to: 'seusers#index1'
+  post 'seusers/querySe', to: 'seusers#querySe'
+
   post 'seusers', to: 'seusers#upload'
 	get 'seusers/page', to: 'seusers#page'
 

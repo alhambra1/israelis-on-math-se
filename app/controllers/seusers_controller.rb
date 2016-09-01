@@ -9,6 +9,11 @@ class SeusersController < ApplicationController
   def index1
   end
 
+  def querySe
+    file = open("http://stackoverflow.com/search?q=user%3A#{params[:user_id]}+" + URI::encode(params[:query])).read
+    render json: !file.match(/returned no matches/)
+  end
+
   def page
     render json: {currentPage: Page.last.number}, status: 200
   end
