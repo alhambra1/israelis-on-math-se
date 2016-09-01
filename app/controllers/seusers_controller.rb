@@ -8,7 +8,7 @@ class SeusersController < ApplicationController
   
   def querySe
     file = open("http://math.stackexchange.com/search?q=user%3A#{params[:user_id]}+" + URI::encode(params[:query])).read
-    render json: !file.match(/returned no matches/)
+    render json: file.match(/returned no matches/).nil?
   end
 
   def page
