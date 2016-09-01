@@ -18,7 +18,7 @@
 <script type="text/javascript" charset="utf-8">
   angular
     .module('app',[])
-    .controller('IndexController',function($http){
+    .controller('IndexController',function($http,$timeout){
       var ctrl = this;
 
       ctrl.pageSize = 100;
@@ -69,7 +69,7 @@
               ctrl.filteredUsers.push(ctrl.users[i]);
             }
 
-            querySe(i + 1);
+            $timeout(function(){ querySe(i + 1); }, 100);
           });
         }
       
