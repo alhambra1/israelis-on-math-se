@@ -65,8 +65,9 @@
           postData = {user_id: ctrl.users[i].user.user_id, query: ctrl.search}
 
           $http.post('seusers/querySe',postData).then(function(resp){
-            var hasMatches = resp.data;
-
+            var hasMatches = resp.data.has_matches;
+if(ctrl.users[i].user.user_id == 9560)
+  console.log(resp.data)
             if (hasMatches){
               ctrl.filteredUsers.push(ctrl.users[i]);
 
