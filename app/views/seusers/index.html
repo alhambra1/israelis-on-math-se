@@ -26,7 +26,7 @@
       ctrl.users = [];
       ctrl.numPages = 0;
 
-      ctrl.requestRate = 1000;
+      ctrl.requestRate = 2200;
            
       ctrl.prevPage = function(){
         if (ctrl.currentPage > 1){ 
@@ -66,13 +66,12 @@
 
           $http.post('seusers/querySe',postData).then(function(resp){
             var hasMatches = resp.data.has_matches;
-if(ctrl.users[i].user.user_id == 9560)
-  console.log(resp.data)
+
             if (hasMatches){
               ctrl.filteredUsers.push(ctrl.users[i]);
 
             } else {
-              ctrl.filteredUsers.push({user: {user_id: ctrl.users[i].user.user_id, results: 'None'}})
+              ctrl.filteredUsers.push({user: {user_id: ctrl.users[i].user.user_id, too_many_requests: resp.data.too_many_requests }})
             }
 
             $timeout(function(){ querySe(i + 1); }, ctrl.requestRate);
