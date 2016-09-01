@@ -5,6 +5,9 @@ class SeusersController < ApplicationController
       f.html {render :index}
     end
   end
+  
+  def index1
+  end
 
   def page
     render json: {currentPage: Page.last.number}, status: 200
