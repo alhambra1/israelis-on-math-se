@@ -26,7 +26,7 @@
       ctrl.users = [];
       ctrl.numPages = 0;
 
-      ctrl.requestRate = 2200;
+      ctrl.requestRate = 3000;
            
       ctrl.prevPage = function(){
         if (ctrl.currentPage > 1){ 
@@ -71,7 +71,9 @@
               ctrl.filteredUsers.push(ctrl.users[i]);
 
             } else if (resp.data.too_many_requests){
-              ctrl.filteredUsers.push({user: {user_id: ctrl.users[i].user.user_id, too_many_requests: resp.data.too_many_requests }})
+              ctrl.filteredUsers.push({user: {user_id: ctrl.users[i].user.user_id, too_many_requests: resp.data.too_many_requests }});
+
+              return $timeout(function(){ querySe(i); },10000);
 
             } else {
               ctrl.filteredUsers.push({user: {user_id: ctrl.users[i].user.user_id, results: 'none'}});
